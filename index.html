@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>A Little Surprise</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background:
+                radial-gradient(circle at top, #3b1d3d 0%, #160d1c 45%, #08060c 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background stars */
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255,255,255,.8);
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            from {
+                opacity: .2;
+                transform: scale(.7);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1.4);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Intro */
+        .intro {
+            transition: .8s ease;
+        }
+
+        .intro.hide {
+            opacity: 0;
+            transform: translateY(-30px);
+            pointer-events: none;
+        }
+
+        .intro h1 {
+            font-size: 32px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            letter-spacing: .5px;
+        }
+
+        .intro p {
+            color: #d8cbd8;
+            font-size: 16px;
+            margin-bottom: 50px;
+        }
+
+        /* Gift */
+        .gift-area {
+            width: 190px;
+            height: 190px;
+            margin: auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform .3s ease;
+        }
+
+        .gift-area:hover {
+            transform: scale(1.05);
+        }
+
+        .gift {
+            position: absolute;
+            width: 140px;
+            height: 105px;
+            left: 25px;
+            bottom: 20px;
+        }
+
+        .box {
+            position: absolute;
+            bottom: 0;
+            width: 140px;
+            height: 90px;
+            border-radius: 5px 5px 12px 12px;
+            background: linear-gradient(135deg, #c62e61, #7c153c);
+            box-shadow:
+                0 20px 40px rgba(0,0,0,.4),
+                inset 0 1px 0 rgba(255,255,255,.25);
+        }
+
+        .box::before {
+            content: "";
+            position: absolute;
+            left: 57px;
+            width: 26px;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                #f4c76a,
+                #ffe6a2,
+                #d9a849
+            );
+        }
+
+        .lid {
+            position: absolute;
+            width: 154px;
+            height: 28px;
+            left: -7px;
+            top: -15px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #df3a70, #8e1745);
+            z-index: 3;
+            box-shadow: 0 8px 15px rgba(0,0,0,.25);
+            transition:
+                transform 1s cubic-bezier(.2,.8,.2,1),
+                top 1s ease;
+        }
+
+        .lid::after {
+            content: "";
+            position: absolute;
+            left: 64px;
+            top: 0;
+            width: 26px;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                #f4c76a,
+                #ffe6a2,
+                #d9a849
+            );
+        }
+
+        /* Ribbon bow */
+        .bow {
+            position: absolute;
+            top: -42px;
+            left: 48px;
+            width: 44px;
+            height: 35px;
+            z-index: 5;
+        }
+
+        .bow::before,
+        .bow::after {
+            content: "";
+            position: absolute;
+            width: 32px;
+            height: 25px;
+            background: #e4b44e;
+            border-radius: 50% 50% 50% 10%;
+            top: 4px;
+        }
+
+        .bow::before {
+            left: -18px;
+            transform: rotate(-25deg);
+        }
+
+        .bow::after {
+            right: -18px;
+            transform: rotate(25deg) scaleX(-1);
+        }
+
+        .bow-center {
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            background: #f6d477;
+            border-radius: 50%;
+            left: 13px;
+            top: 8px;
+            z-index: 2;
+        }
+
+        /* Open animation */
+        .gift-area.open .lid {
+            transform: translateY(-75px) rotate(-8deg);
+        }
+
+        .gift-area.open .bow {
+            transform: translateY(-75px) rotate(-8deg);
+            transition: 1s ease;
+        }
+
+        .gift-area.open {
+            animation: giftOpen .8s ease;
+        }
+
+        @keyframes giftOpen {
+            0% {
+                transform: scale(1);
+            }
+
+            40% {
+                transform: scale(1.12);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .click-text {
+            margin-top: 20px;
+            color: #d8cbd8;
+            font-size: 14px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: .45;
+            }
+        }
+
+        /* Message */
+        .message {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            opacity: 0;
+            transform: scale(.9) translateY(20px);
+            pointer-events: none;
+            transition: 1s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .message-card {
+            width: 100%;
+            padding: 45px 35px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 25px;
+
+            background: rgba(255,255,255,.07);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.5),
+                inset 0 1px 0 rgba(255,255,255,.1);
+        }
+
+        .heart {
+            font-size: 32px;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        .message-title {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        .message-text {
+            font-size: 20px;
+            line-height: 2;
+            color: #eee4ed;
+            min-height: 180px;
+        }
+
+        .line {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: .8s ease;
+            margin-bottom: 7px;
+        }
+
+        .line.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .signature {
+            margin-top: 25px;
+            color: #e9b9cf;
+            font-size: 16px;
+            opacity: 0;
+            transition: 1s ease;
+        }
+
+        .signature.show {
+            opacity: 1;
+        }
+
+        .replay {
+            margin-top: 30px;
+            padding: 11px 25px;
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 30px;
+            background: rgba(255,255,255,.08);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: .3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .replay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .replay:hover {
+            background: rgba(255,255,255,.15);
+            transform: translateY(-2px);
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            animation: floatUp 3s ease-out forwards;
+            z-index: 20;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(.7) rotate(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-220px) scale(1.4) rotate(25deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .intro h1 {
+                font-size: 25px;
+            }
+
+            .intro p {
+                font-size: 14px;
+            }
+
+            .message-card {
+                padding: 35px 22px;
+            }
+
+            .message-title {
+                font-size: 23px;
+            }
+
+            .message-text {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Stars -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+
+        <!-- Intro -->
+        <div class="intro" id="intro">
+
+            <h1>There is something for you...</h1>
+
+            <p>
+                I think you should open this.
+            </p>
+
+            <!-- Gift -->
+            <div class="gift-area" id="gift">
+
+                <div class="gift">
+
+                    <div class="bow">
+                        <div class="bow-center"></div>
+                    </div>
+
+                    <div class="lid"></div>
+
+                    <div class="box"></div>
+
+                </div>
+
+            </div>
+
+            <div class="click-text">
+                اضغط على الهدية 🎁
+            </div>
+
+        </div>
+
+
+        <!-- Message -->
+        <div class="message" id="message">
+
+            <div class="message-card">
+
+                <div class="heart">♡</div>
+
+                <div class="message-title">
+                    For You
+                </div>
+
+                <div class="message-text">
+
+                    <div class="line">
+                       أتُرى سئمتِ فَظاظتِي
+وهجرتِ حُباً أثقلَك ؟
+أم كنتُ شيطاناً هوى
+                    </div>
+
+                    <div class="line">
+                        
+فرحلتِ بحثاً عن ملَك ؟
+
+ووجَدتِّ في الأفقِ البعيدِ
+
+مَنِ احتواكِ ودلَّلكْ ..
+                    </div>
+
+                    <div class="line">
+                        حسَناً ، سَأزعمُ أنني
+
+ما جِئتُ
+
+حتى أسألَك ..
+
+بل جئتُ في ثوبِ المُحبِّ
+
+ومن أنا كي أجهلَك ؟!
+                    </div>
+
+                    <div class="line">
+                        
+وهجرتُ منزليَ الوحيدِ
+
+لِكَيْ أُصادِفَ منزِلك ..
+
+بيَدي بقايا وردةٍ
+
+كانت تُحبُّ قُرنفُلَك ..
+                    </div>
+
+                    <div class="line">
+                        
+حتى أقولَ: عزيزتي
+
+قسَماً بِأنِّي
+
+"اشتقتُ لك"
+                    </div>
+
+                    <div class="line">
+                    </div>
+
+                </div>
+
+                <div class="signature" id="signature">
+                    Always remember that.
+                </div>
+
+                <button class="replay" id="replay">
+                    ↻ اقرأها من الأول
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const gift = document.getElementById("gift");
+        const intro = document.getElementById("intro");
+        const message = document.getElementById("message");
+        const lines = document.querySelectorAll(".line");
+        const signature = document.getElementById("signature");
+        const replay = document.getElementById("replay");
+
+        let opened = false;
+
+
+        /* Create stars */
+        const stars = document.getElementById("stars");
+
+        for (let i = 0; i < 80; i++) {
+
+            const star = document.createElement("div");
+
+            star.classList.add("star");
+
+            star.style.left = Math.random() * 100 + "%";
+            star.style.top = Math.random() * 100 + "%";
+
+            star.style.animationDelay =
+                Math.random() * 2 + "s";
+
+            stars.appendChild(star);
+        }
+
+
+        /* Open gift */
+        gift.addEventListener("click", () => {
+
+            if (opened) return;
+
+            opened = true;
+
+            gift.classList.add("open");
+
+            createParticles();
+
+            setTimeout(() => {
+
+                intro.classList.add("hide");
+
+            }, 900);
+
+
+            setTimeout(() => {
+
+                message.classList.add("show");
+
+                showLines();
+
+            }, 1500);
+
+        });
+
+
+        /* Show message line by line */
+        function showLines() {
+
+            lines.forEach((line, index) => {
+
+                setTimeout(() => {
+
+                    line.classList.add("show");
+
+                }, index * 1100);
+
+            });
+
+
+            const totalTime =
+                lines.length * 1100 + 800;
+
+
+            setTimeout(() => {
+
+                signature.classList.add("show");
+
+            }, totalTime);
+
+
+            setTimeout(() => {
+
+                replay.classList.add("show");
+
+            }, totalTime + 1000);
+
+        }
+
+
+        /* Floating hearts */
+        function createParticles() {
+
+            const symbols = ["♡", "♥", "✦", "✧", "⋆"];
+
+            for (let i = 0; i < 25; i++) {
+
+                const particle =
+                    document.createElement("div");
+
+                particle.classList.add("particle");
+
+                particle.innerText =
+                    symbols[Math.floor(
+                        Math.random() * symbols.length
+                    )];
+
+                particle.style.left =
+                    35 + Math.random() * 30 + "%";
+
+                particle.style.top =
+                    45 + Math.random() * 10 + "%";
+
+                particle.style.animationDelay =
+                    Math.random() * .8 + "s";
+
+                document.body.appendChild(particle);
+
+
+                setTimeout(() => {
+
+                    particle.remove();
+
+                }, 4000);
+
+            }
+
+        }
+
+
+        /* Replay */
+        replay.addEventListener("click", () => {
+
+            opened = false;
+
+            message.classList.remove("show");
+
+            signature.classList.remove("show");
+
+            replay.classList.remove("show");
+
+            lines.forEach(line => {
+
+                line.classList.remove("show");
+
+            });
+
+            setTimeout(() => {
+
+                intro.classList.remove("hide");
+
+                gift.classList.remove("open");
+
+            }, 700);
+
+        });
+
+    </script>
+
+</body>
+</html>
